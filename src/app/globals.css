@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors from PromptWonk app global.css :root */
+  --color-background: #1b1f22;
+  --color-foreground: #d5dce8;
+  --color-card: #373e48;
+  --color-card-foreground: #dae1eb;
+  --color-primary: #6b8aef;
+  --color-primary-foreground: #131a23;
+  --color-secondary: #242a30;
+  --color-secondary-foreground: #d0d9e7;
+  --color-muted: #373d44;
+  --color-muted-foreground: #8d95a2;
+  --color-accent: #3366ff;
+  --color-accent-foreground: #a8e8ff;
+  --color-destructive: #c43232;
+  --color-destructive-foreground: #f0f0f0;
+  --color-border: #3a4150;
+  --color-input: #3a4150;
+  --color-ring: #6b8aef;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --radius: 0.65rem;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  z-index: 100;
+  transition: width 50ms ease-out;
+}
+
+/* Prose styling for MDX content */
+.prose {
+  color: var(--color-secondary-foreground);
+  line-height: 1.8;
+  font-size: 1.0625rem;
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: var(--color-foreground);
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+.prose h1 { font-size: 2rem; }
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.25rem; }
+.prose p { margin-bottom: 1.25em; }
+.prose a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose a:hover { color: var(--color-accent-foreground); }
+.prose strong { color: var(--color-foreground); font-weight: 600; }
+.prose code {
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  padding: 0.15em 0.4em;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  color: var(--color-primary);
+}
+.prose pre {
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.5em;
+}
+.prose pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--color-foreground);
+}
+.prose ul, .prose ol { margin-bottom: 1.25em; padding-left: 1.5em; }
+.prose li { margin-bottom: 0.5em; }
+.prose ul li::marker { color: var(--color-primary); }
+.prose ol li::marker { color: var(--color-primary); font-weight: 600; }
+.prose blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1em;
+  color: var(--color-muted-foreground);
+  font-style: italic;
+  margin-bottom: 1.25em;
+}
+.prose hr { border-color: var(--color-border); margin: 2em 0; }
+.prose img { border-radius: 0.75rem; margin: 1.5em 0; }
+
+/* Custom scrollbar */
+* { scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent; }
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background-color: var(--color-primary); border-radius: 3px; }

@@ -1,0 +1,172 @@
+---
+title: "5 Prompt Engineering Techniques That Actually Work"
+date: "2026-03-20"
+tags: ["techniques", "fundamentals", "productivity"]
+excerpt: "Skip the fluff. These five prompting techniques consistently produce better outputs across every major LLM — and you can start using them right now."
+author: "PromptWonk Team"
+---
+
+Most prompt engineering advice boils down to "be more specific." That's not wrong, but it's about as helpful as telling a cook to "use better ingredients." You need the actual techniques.
+
+After testing thousands of prompts across GPT-4, Claude, Gemini, and open-source models, these are the five techniques that consistently move the needle. No gimmicks, no "secret hacks" — just patterns that work.
+
+## 1. Role Framing
+
+Tell the model who it is before telling it what to do. This isn't about flattery — it's about activating relevant knowledge patterns.
+
+**The difference is real.** Compare these two prompts:
+
+```
+Bad:  "Explain how DNS works."
+Good: "You are a senior network engineer teaching a junior developer.
+       Explain how DNS works, focusing on what happens between typing
+       a URL and seeing a webpage."
+```
+
+The second prompt does three things: sets expertise level, defines the audience, and scopes the response. The model doesn't just explain DNS — it explains it the way a network engineer would to a junior dev.
+
+**When to use it:** Any time you need domain-specific depth or a particular communication style.
+
+**Pro tip:** Be specific about the role. "Expert" is vague. "Senior backend engineer with 10 years of experience in distributed systems" gives the model a much sharper frame.
+
+## 2. Chain of Thought (CoT)
+
+Instead of asking for the answer, ask the model to think through the problem step by step. This single technique can turn wrong answers into right ones on complex tasks.
+
+```
+Without CoT:
+"What's 17 * 23 + 45 / 9?"
+
+With CoT:
+"Solve this step by step, showing your work: 17 * 23 + 45 / 9"
+```
+
+For math, this is table stakes. But CoT shines in less obvious places:
+
+```
+"I need to decide between PostgreSQL and MongoDB for a social media app.
+Think through the key factors step by step:
+1. Data relationships
+2. Query patterns
+3. Scaling needs
+4. Development speed
+Then give me your recommendation with reasoning."
+```
+
+**When to use it:** Complex reasoning, multi-step problems, decisions with tradeoffs, debugging, or any task where the model might take shortcuts.
+
+**What most people miss:** You can also use CoT in reverse. Ask the model to explain its reasoning *after* giving an answer to verify quality.
+
+## 3. Output Structure Constraints
+
+Don't let the model decide how to format its response. Tell it exactly what you want.
+
+```
+"Analyze this code for security vulnerabilities.
+
+Format your response as:
+## Vulnerability: [name]
+- **Severity:** Critical / High / Medium / Low
+- **Location:** [file:line]
+- **Description:** [1-2 sentences]
+- **Fix:** [specific code change]
+
+List all vulnerabilities found, ordered by severity."
+```
+
+This does two things: it forces the model to organize its thinking systematically, and it gives you output you can actually use without reformatting.
+
+**Formats that work well:**
+- Markdown tables for comparisons
+- Numbered lists for sequential steps
+- JSON for structured data you'll process programmatically
+- Bullet points with bold labels for scannable summaries
+
+**When to use it:** Always. Seriously. Even casual questions benefit from "answer in 2-3 sentences" or "give me a bulleted list."
+
+## 4. Negative Constraints
+
+Telling the model what NOT to do is often more powerful than telling it what to do. Models have default behaviors that don't always serve you.
+
+```
+"Write a product description for a mechanical keyboard.
+
+Do NOT:
+- Use superlatives (best, amazing, incredible)
+- Include a call to action
+- Mention competitors
+- Exceed 100 words
+
+DO:
+- Focus on the tactile feel and build quality
+- Use sensory language
+- Write for enthusiasts who know keyboards"
+```
+
+**Common negative constraints that improve output:**
+- "Don't start with 'Sure!' or 'Great question!'"
+- "Don't include disclaimers or caveats"
+- "Don't explain basic concepts I already know"
+- "Don't use bullet points" (when you want flowing prose)
+- "Don't include code comments" (when you want clean output)
+
+**When to use it:** Whenever you keep getting the same unwanted patterns in responses. Instead of rephrasing your positive instructions, just explicitly ban the behavior you don't want.
+
+## 5. Iterative Refinement with Anchoring
+
+Don't try to write the perfect prompt on the first attempt. Start rough, then refine by anchoring to specific parts of the output.
+
+**Round 1:**
+```
+"Write a function that validates email addresses in Python."
+```
+
+**Round 2:**
+```
+"Good start. Now modify it to:
+- Use regex instead of string splitting
+- Handle edge cases: plus addressing (user+tag@), subdomains
+- Return a typed result (valid/invalid + reason)
+- Add type hints"
+```
+
+**Round 3:**
+```
+"The regex is too permissive. It should reject:
+- Consecutive dots in the local part
+- Domains without a TLD
+Keep everything else the same."
+```
+
+This works because each round builds on context. The model doesn't start from scratch — it refines. And your feedback is specific enough that it knows exactly what to change.
+
+**When to use it:** Complex outputs (code, long-form writing, analysis). The first prompt gets 70% right. The next two or three get you to 95%.
+
+## Putting It All Together
+
+These techniques stack. Here's what a well-engineered prompt looks like when you combine them:
+
+```
+You are a senior technical writer at a developer tools company.
+
+Write a migration guide for users upgrading from v2 to v3 of our API.
+
+Think through the breaking changes step by step, then organize the guide.
+
+Format:
+## [Breaking Change Name]
+- **What changed:** [1 sentence]
+- **Migration steps:** [numbered list]
+- **Code example:** [before/after]
+
+Do NOT include marketing language, version history, or feature comparisons.
+Keep it under 1500 words. Prioritize the changes most likely to cause errors.
+```
+
+That single prompt uses role framing, chain of thought, output structure, and negative constraints. It'll produce something usable on the first try — and if it doesn't, you can refine from there.
+
+## Start Here
+
+You don't need to memorize frameworks or buy courses. Pick one technique, apply it to your next prompt, and see what happens. The difference between a mediocre prompt and a good one is usually just 10-20 extra words of context and structure.
+
+The best prompt engineers aren't people with secret knowledge. They're people who've built the habit of thinking about what they actually want before they hit enter.

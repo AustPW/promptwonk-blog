@@ -1,0 +1,149 @@
+---
+title: "Why Most People Are Bad at Prompting (And How to Fix It)"
+date: "2026-03-17"
+tags: ["fundamentals", "mindset", "beginners"]
+excerpt: "It's not about intelligence or technical skill. Most people write bad prompts because they skip the same three steps every time."
+author: "PromptWonk Team"
+---
+
+Here's a prompt someone actually sent to ChatGPT last week:
+
+```
+help me with my presentation
+```
+
+They got a generic five-slide outline about "tips for effective presentations." It wasn't wrong. It was useless.
+
+The person wasn't stupid. They were a marketing director at a SaaS company. They knew what they wanted — a competitive analysis deck for their board meeting. But they treated the AI like a mind reader instead of a tool.
+
+This is the default behavior for about 90% of people using AI tools. And it's fixable.
+
+## The Three Mistakes Everyone Makes
+
+### Mistake 1: Being Vague When You Need to Be Specific
+
+The biggest gap between good and bad prompts isn't length — it's specificity. Vague prompts produce vague output.
+
+```
+Vague:  "Write a blog post about React."
+Better: "Write an 800-word blog post explaining React Server Components
+         for developers who know React but haven't used the App Router.
+         Focus on the mental model shift, not the API details.
+         Include one practical example."
+```
+
+The vague version could produce literally anything about React. The specific version constrains the model to produce something useful.
+
+**The fix:** Before writing a prompt, answer three questions:
+1. What specifically do I want? (Not "a blog post" — what *kind* of blog post?)
+2. Who is this for? (Their knowledge level and needs)
+3. What does "good" look like? (Length, format, tone, depth)
+
+### Mistake 2: Dumping Context Instead of Structuring It
+
+People who've learned that "more context is better" often swing too far the other direction. They paste walls of text and hope the model figures out what matters.
+
+```
+Bad context dump:
+"Here's our company info [3 pages of text]. We need marketing copy.
+Our competitors are [2 pages]. Here's our product spec [5 pages].
+Write something."
+
+Structured context:
+"You're writing landing page copy for Acme Analytics.
+
+Key facts:
+- Product: Real-time dashboard for e-commerce metrics
+- Target user: E-commerce managers at mid-size brands ($5M-$50M revenue)
+- Main differentiator: Connects all platforms (Shopify, Amazon, WooCommerce) in one view
+- Tone: Professional but not corporate, data-driven
+
+Write a hero section (headline + subheadline + 2 bullet points).
+Keep it under 75 words total."
+```
+
+**The fix:** Distill your context into bullet points before including it. If you can't summarize a piece of context in one line, the model probably can't use it effectively either.
+
+### Mistake 3: Accepting the First Output
+
+This is the subtlest mistake and the most common. Most people send a prompt, read the response, and either use it or start over with a completely different prompt.
+
+The problem: the first response is almost never the best one. It's a starting point.
+
+Good prompt engineers treat the first output as a draft. They read it critically and then give specific feedback:
+
+```
+Round 1: "Write an email declining a vendor's proposal."
+[gets a generic polite rejection]
+
+Round 2: "Good structure, but:
+- Make the tone warmer — we want to work with them in the future
+- Add a specific reason (budget constraints for Q2)
+- Suggest reconnecting in Q3
+- Keep it under 150 words"
+```
+
+**The fix:** Commit to at least two rounds on anything that matters. The first round gets the shape right. The second round makes it actually good.
+
+## The Mental Model Shift
+
+Here's the core insight most people miss: **you are not asking a question. You are writing a specification.**
+
+When you google something, you write a query. When you prompt an AI, you're writing a brief — like you would for a designer, a copywriter, or a contractor.
+
+Think about it: you'd never hire a freelance writer and say "write me something about marketing." You'd give them a brief with the topic, audience, length, tone, examples of what you like, and what you definitely don't want.
+
+Prompting is the same thing. The AI is your contractor. Your prompt is the brief.
+
+## A Framework for Better Prompts
+
+You don't need a complex template. Just hit these five elements:
+
+1. **Role** — Who should the AI be? (optional but powerful)
+2. **Task** — What exactly do you want?
+3. **Context** — What does the AI need to know?
+4. **Format** — How should the output look?
+5. **Constraints** — What should it avoid?
+
+Here's how that looks in practice:
+
+```
+[Role] You're a data analyst explaining findings to a non-technical CEO.
+
+[Task] Summarize these Q4 sales results.
+
+[Context]
+- Revenue: $2.3M (up 15% QoQ)
+- New customers: 142 (down 8% QoQ)
+- Churn: 3.2% (stable)
+- Top product: Enterprise plan (68% of revenue)
+
+[Format] 3-4 sentences, then 2 bullet points for recommended actions.
+
+[Constraints] No jargon. No charts. Focus on what the CEO should do,
+not what happened.
+```
+
+This takes 30 seconds longer to write than "summarize these sales results." The output is 10x more useful.
+
+## Common Patterns That Kill Prompt Quality
+
+**Over-politeness:** "Could you please kindly help me with writing a nice email?" Just say "Write an email that..."
+
+**Hedge words:** "Maybe you could try to give me something like a summary?" These signal uncertainty and the model mirrors it.
+
+**Compound requests without structure:** "Write a blog post and also create social media posts and an email subject line and maybe a meta description." Split these into separate requests or explicitly structure them.
+
+**Assuming context from previous conversations:** Each prompt should contain everything the model needs. Don't assume it "remembers" the nuance from five messages ago — its attention degrades over long conversations.
+
+## The Skill That Pays Off
+
+Prompt engineering isn't a separate skill from your actual job. It's a multiplier on everything you already do.
+
+A marketer who writes specific prompts produces better first drafts in half the time. A developer who structures their debugging prompts fixes issues faster. A manager who writes clear AI briefs gets usable outputs instead of generic templates.
+
+The gap between "uses AI" and "uses AI well" is mostly about the 30 seconds of thought before you type. That's the habit to build.
+
+Start with your next prompt. Before you hit enter, re-read it and ask: "If I sent this brief to a smart intern who knows nothing about my project, would they know exactly what to produce?"
+
+If the answer is no, keep editing.

@@ -1,0 +1,231 @@
+---
+title: "The Art of Few-Shot Prompting: A Practical Guide"
+date: "2026-03-14"
+tags: ["techniques", "advanced", "examples"]
+excerpt: "Few-shot prompting is the fastest way to get an AI to match your exact style, format, or logic. Here's how to do it right — with real examples you can steal."
+author: "PromptWonk Team"
+---
+
+Zero-shot prompting is when you describe what you want and hope for the best. Few-shot prompting is when you *show* the model what you want.
+
+The difference sounds small. In practice, it's the difference between spending 20 minutes tweaking a prompt and getting the right output on the first try.
+
+## What Few-Shot Prompting Actually Is
+
+You give the model examples of input-output pairs before asking it to handle your actual input. The model picks up on the pattern and replicates it.
+
+Simple version:
+
+```
+Convert these product names to URL slugs:
+
+Product: "Ultra HD 4K Monitor (27 inch)"
+Slug: ultra-hd-4k-monitor-27-inch
+
+Product: "Wireless Noise-Cancelling Headphones® Pro"
+Slug: wireless-noise-cancelling-headphones-pro
+
+Product: "USB-C Hub — 7 Port (Silver Edition)"
+Slug:
+```
+
+The model sees the pattern (lowercase, hyphens, strip special characters and parenthetical details) and applies it consistently. No need to write rules for every edge case — the examples *are* the rules.
+
+## When to Use Few-Shot vs. Zero-Shot
+
+Use **zero-shot** when:
+- The task is straightforward and well-defined
+- Standard formatting is fine
+- You're doing something common (summarize, translate, explain)
+
+Use **few-shot** when:
+- You need a specific format or style the model doesn't default to
+- Consistency across multiple outputs matters
+- The task has edge cases that are hard to describe in words
+- You're doing something unusual or domain-specific
+
+## How Many Examples Do You Need?
+
+The short answer: 2-5.
+
+- **2 examples** work for simple formatting tasks
+- **3 examples** cover most use cases well
+- **5 examples** help with complex or ambiguous tasks
+- **More than 5** rarely adds value and wastes context window
+
+The key is variety in your examples. If all your examples look the same, the model learns a narrow pattern. If they cover different edge cases, the model generalizes better.
+
+```
+Bad examples (too similar):
+Input: "The weather is nice" → Positive
+Input: "I love this product" → Positive
+Input: "Great experience" → Positive
+
+Good examples (diverse):
+Input: "The weather is nice" → Positive
+Input: "Worst purchase I've ever made" → Negative
+Input: "The package arrived on time" → Neutral
+```
+
+## Practical Few-Shot Patterns
+
+### Pattern 1: Style Matching
+
+You have a writing style you want replicated. Show, don't tell.
+
+```
+Write changelog entries in this style:
+
+Example 1:
+Feature: Added dark mode support
+Entry: 🌙 Dark mode is here. Toggle it in Settings → Appearance. Your eyes will thank you after 6pm.
+
+Example 2:
+Feature: Improved search speed
+Entry: 🔍 Search is now 3x faster. We rebuilt the index from scratch — same results, less waiting.
+
+Now write:
+Feature: Added CSV export for reports
+Entry:
+```
+
+This works because the model captures the emoji prefix, the casual tone, the structure (what + how + benefit), and the sentence length — all from examples rather than explicit instructions.
+
+### Pattern 2: Classification with Edge Cases
+
+```
+Classify these customer support messages:
+
+Message: "My order hasn't arrived and it's been 2 weeks"
+Category: Shipping
+Priority: High
+Reason: Delayed delivery beyond expected window
+
+Message: "How do I change my password?"
+Category: Account
+Priority: Low
+Reason: Standard self-service question
+
+Message: "I was charged twice for the same order!!"
+Category: Billing
+Priority: Critical
+Reason: Duplicate charge, potential escalation
+
+Message: "Can you recommend a good laptop bag to go with my purchase?"
+Category: Pre-sales
+Priority: Low
+Reason: Product inquiry, not an issue
+
+Now classify this message:
+Message: "I received the wrong item and I need this for a wedding tomorrow"
+```
+
+Notice how the examples establish the output format AND demonstrate how urgency and context affect the priority level. Writing rules for this would be a paragraph. Four examples cover it.
+
+### Pattern 3: Data Transformation
+
+```
+Convert these meeting notes to action items:
+
+Notes: "Sarah mentioned the API docs need updating before the launch.
+Mike said he'd review the staging deployment by Friday.
+Team agreed to push the deadline to next Wednesday."
+
+Action items:
+- [ ] Sarah: Update API docs (before launch)
+- [ ] Mike: Review staging deployment (by Friday)
+- [ ] Team: Adjust deadline to next Wednesday
+
+Notes: "Product wants to add dark mode but eng says it's 2 sprints.
+Lisa will create the design specs this week. We'll revisit priority
+in the next planning session."
+
+Action items:
+- [ ] Lisa: Create dark mode design specs (this week)
+- [ ] Team: Revisit dark mode priority (next planning session)
+- [ ] Note: Eng estimate is 2 sprints
+
+Now convert these notes:
+"Jake needs to fix the login bug that 3 customers reported.
+Anna will draft the Q2 roadmap and share it with stakeholders.
+We're waiting on legal to approve the new terms of service."
+```
+
+### Pattern 4: Code Generation with Conventions
+
+```
+Write API endpoint handlers following these examples:
+
+Example 1 - GET single resource:
+```typescript
+export async function getUser(id: string): Promise<Result<User>> {
+  const user = await db.users.findUnique({ where: { id } });
+  if (!user) return { ok: false, error: "USER_NOT_FOUND" };
+  return { ok: true, data: sanitizeUser(user) };
+}
+```
+
+Example 2 - POST create resource:
+```typescript
+export async function createProject(input: CreateProjectInput): Promise<Result<Project>> {
+  const validated = createProjectSchema.safeParse(input);
+  if (!validated.success) return { ok: false, error: "VALIDATION_FAILED" };
+  const project = await db.projects.create({ data: validated.data });
+  return { ok: true, data: project };
+}
+```
+
+Now write: DELETE endpoint for removing a team member from a project
+```
+
+The model picks up on the Result type pattern, error string conventions, validation approach, and naming conventions — all from examples.
+
+## Common Few-Shot Mistakes
+
+### Mistake 1: Inconsistent Examples
+
+If your examples use different formats, the model gets confused about which format to follow.
+
+```
+Bad:
+Example 1: Returns JSON
+Example 2: Returns a sentence
+Example 3: Returns markdown
+
+Good:
+All examples return the same format
+```
+
+### Mistake 2: Not Covering Edge Cases
+
+Your examples should include at least one tricky case. If everything in your examples is straightforward, the model won't know how to handle ambiguity in real inputs.
+
+### Mistake 3: Examples That Are Too Long
+
+Each example should be concise. Long examples eat context window and can confuse the pattern. If your examples need to be long, you probably need fewer of them.
+
+### Mistake 4: Putting Examples After Instructions
+
+Structure matters. The best format is:
+
+1. Brief task description (1-2 sentences)
+2. Examples
+3. The actual input to process
+
+Don't bury examples at the end after paragraphs of instructions.
+
+## The Power Move: Dynamic Few-Shot
+
+For production applications, don't use the same examples every time. Select examples that are most relevant to the current input.
+
+If someone asks about a billing issue, use billing-related few-shot examples. If they ask about shipping, use shipping examples. This is called dynamic few-shot selection, and it's how most serious AI applications work behind the scenes.
+
+You can do this manually too. When you're writing a prompt for a specific task, choose examples that are close to your actual input — not generic ones.
+
+## Start Using This Today
+
+Pick a task you do regularly with AI. Write 2-3 examples of the input-output pairs you want. Include them in your prompt before your actual request.
+
+You'll notice two things: the output quality jumps immediately, and you spend less time editing the result.
+
+Few-shot prompting isn't fancy. It's just showing instead of telling. And it works better almost every time.

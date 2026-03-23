@@ -1,0 +1,265 @@
+---
+title: "How to Test and Iterate on Your Prompts Like a Pro"
+date: "2026-03-08"
+tags: ["testing", "workflow", "productivity"]
+excerpt: "Writing a prompt is step one. Testing it systematically is what separates people who get lucky from people who get consistent results."
+author: "PromptWonk Team"
+---
+
+You wrote a prompt. It worked great on your first test input. You ship it. Then it falls apart on real data.
+
+This happens because most people test prompts the way they test nothing else in their professional lives: with a single example and a gut check.
+
+Prompts deserve the same rigor as any other piece of production logic. Here's how to test and iterate on them systematically.
+
+## The Testing Mindset
+
+Think of your prompt as a function. It takes an input and produces an output. Like any function, it should be:
+
+- **Consistent:** Same types of inputs produce same types of outputs
+- **Robust:** Edge cases don't cause failures
+- **Predictable:** You can explain why it produces what it produces
+
+Most prompts fail on consistency. They work great for the example the author had in mind and produce garbage for inputs that are slightly different.
+
+## Step 1: Build a Test Set
+
+Before you iterate on your prompt, build a test set of 10-20 inputs that represent the range of real-world use cases.
+
+For a prompt that classifies customer feedback:
+
+```
+Test set:
+1. "Love this app! Best purchase ever."           → Expected: Positive
+2. "The app crashes every time I open it."         → Expected: Negative
+3. "Works fine."                                    → Expected: Neutral
+4. "Great features but terrible customer support." → Expected: Mixed
+5. "Can you add dark mode?"                        → Expected: Feature Request
+6. ""                                               → Expected: Invalid/Empty
+7. "asdfghjkl"                                     → Expected: Invalid/Unclear
+8. "I've been using this for 2 years and it's     → Expected: Negative
+    gotten progressively worse."                    (despite tenure mention)
+9. "Not bad, not great."                           → Expected: Neutral
+10. "I WANT A REFUND RIGHT NOW!!!!"               → Expected: Negative + Urgent
+```
+
+Notice what the test set covers:
+- Clear positive, negative, neutral cases
+- Mixed sentiment
+- Feature requests (a different category entirely)
+- Empty and garbage inputs
+- Long-term users with negative sentiment
+- Urgency signals
+
+If your prompt only works for cases 1-3, it's not ready.
+
+## Step 2: Run Your Baseline
+
+Run every test input through your initial prompt. Record the outputs. Score each one:
+
+- ✅ **Correct:** Output matches expected result
+- ⚠️ **Partially correct:** Right direction, wrong details
+- ❌ **Wrong:** Incorrect output
+
+Don't fix anything yet. Just measure. You want a baseline score before you start iterating.
+
+```
+Baseline results:
+Test 1: ✅ Positive
+Test 2: ✅ Negative
+Test 3: ⚠️ "Mildly positive" (wanted Neutral)
+Test 4: ❌ "Positive" (missed the negative part)
+Test 5: ❌ "Positive" (classified feature request as positive)
+Test 6: ❌ Hallucinated a classification
+Test 7: ❌ Hallucinated a classification
+Test 8: ⚠️ "Mixed" (leaned too much on the tenure)
+Test 9: ✅ Neutral
+Test 10: ✅ Negative (but missed urgency)
+
+Score: 4/10 fully correct
+```
+
+Now you know where the prompt fails. That's where you focus your iteration.
+
+## Step 3: Diagnose the Failures
+
+Group your failures by type. Common failure categories:
+
+**Ambiguity failures:** The model can't decide between two valid interpretations. Fix by adding clearer definitions or decision rules.
+
+**Edge case failures:** Unusual inputs that the prompt doesn't account for. Fix by adding handling instructions or few-shot examples.
+
+**Format failures:** The model produces the right answer in the wrong format. Fix by being more explicit about output structure.
+
+**Hallucination failures:** The model produces confident nonsense. Fix by adding instructions for handling uncertainty.
+
+From our baseline:
+- Tests 4, 8: Ambiguity (mixed sentiment handling)
+- Test 5: Category confusion (feature requests vs. positive)
+- Tests 6, 7: Hallucination (no input validation)
+- Test 3: Calibration (neutral vs. mild positive)
+
+## Step 4: Iterate on the Prompt
+
+Now fix one failure category at a time. Run the full test set after each change.
+
+**Iteration 1: Fix category confusion and add validation**
+
+```
+Original:
+"Classify the sentiment of this customer feedback as
+Positive, Negative, or Neutral."
+
+Updated:
+"Classify this customer feedback into one of these categories:
+- Positive: Customer expresses satisfaction or praise
+- Negative: Customer expresses dissatisfaction, frustration, or reports issues
+- Neutral: Customer states facts without clear sentiment
+- Mixed: Customer expresses both positive and negative sentiment
+- Feature Request: Customer suggests or asks for a new feature
+- Invalid: Input is empty, unclear, or not customer feedback
+
+If uncertain between two categories, choose the one that best represents
+the customer's primary intent."
+```
+
+**Run test set again. Score: 7/10.** Tests 3, 6, 7 still off.
+
+**Iteration 2: Add few-shot examples for edge cases**
+
+```
+Add to prompt:
+
+Examples:
+"Works fine." → Neutral
+"" → Invalid
+"asdfghjkl" → Invalid
+"Great features but terrible customer support." → Mixed
+```
+
+**Score: 9/10.** Test 3 now correct. Tests 6, 7 now correct. Test 10 still missing urgency.
+
+**Iteration 3: Add urgency detection**
+
+```
+Add to prompt:
+
+After classifying sentiment, also flag urgency:
+- Urgent: Customer uses all caps, exclamation marks, demands immediate action, or mentions refunds/cancellation
+- Normal: Everything else
+
+Format: "[Category] | [Urgency]"
+```
+
+**Score: 10/10.**
+
+Three iterations. Ten minutes of work. The prompt went from 40% accuracy to 100% on the test set.
+
+## Step 5: Stress Test
+
+Your test set covers cases you thought of. Now try to break the prompt with cases you didn't think of:
+
+- Very long inputs (5+ paragraphs)
+- Inputs in other languages
+- Sarcasm ("Oh great, another update that breaks everything")
+- Technical jargon
+- Multiple issues in one message
+- Compliments followed by but ("Love the design but...")
+
+When you find new failures, add them to your test set and iterate again.
+
+## Step 6: Monitor in Production
+
+Testing doesn't stop at deployment. Set up a simple feedback loop:
+
+1. Log all prompt inputs and outputs
+2. Sample 20-30 outputs per week for review
+3. Score them the same way you scored your test set
+4. When accuracy drops below your threshold, iterate
+
+A spreadsheet works fine for this. You don't need fancy tooling.
+
+```
+| Date  | Input (summary) | Output    | Correct? | Notes          |
+|-------|-----------------|-----------|----------|----------------|
+| 3/8   | Refund request  | Neg+Urgent| ✅       |                |
+| 3/8   | Sarcastic praise| Positive  | ❌       | Missed sarcasm |
+| 3/9   | Spanish input   | Invalid   | ⚠️       | Should classify|
+```
+
+## The Iteration Toolkit
+
+### Temperature Tuning
+
+For classification and structured outputs, use low temperature (0-0.3). For creative tasks, higher temperature (0.7-1.0).
+
+If your prompt produces inconsistent results on the same input, lower the temperature before changing the prompt itself.
+
+### A/B Testing Prompts
+
+When you're not sure if a change is an improvement:
+1. Run both versions on the full test set
+2. Compare scores
+3. Keep the winner
+
+Don't trust gut feel. Trust the test set.
+
+### Version Control Your Prompts
+
+Treat prompts like code:
+
+```
+prompts/
+  classify-feedback/
+    v1.txt  — baseline, 40% accuracy
+    v2.txt  — added categories, 70%
+    v3.txt  — added examples, 90%
+    v4.txt  — added urgency, 100%
+    test-set.json
+    results.csv
+```
+
+When something breaks in production, you can diff versions and figure out what changed.
+
+### The "Explain Your Reasoning" Debug Tool
+
+When a prompt produces a wrong answer and you can't figure out why, add "Explain your reasoning step by step before giving your final answer" temporarily.
+
+```
+Input: "Love the design but the app is unusable on Android"
+Wrong output: "Positive"
+
+With reasoning:
+"The customer mentions loving the design (positive).
+They also say the app is unusable (negative).
+Since they started with a positive statement...
+Final: Positive"
+
+Aha — the model is biased toward the first sentiment it encounters.
+
+Fix: Add instruction "When sentiment is mixed, weight negative
+functionality issues higher than positive aesthetic comments."
+```
+
+## Common Anti-Patterns
+
+**Testing with only happy-path inputs.** If your test set doesn't include edge cases, your prompt isn't tested.
+
+**Changing multiple things at once.** When you change the role, the format, and the examples simultaneously, you can't tell which change helped.
+
+**Optimizing for your test set instead of real inputs.** If your test set doesn't represent production data, your 100% accuracy is meaningless.
+
+**Iterating forever.** Set a target (e.g., 90% accuracy on test set) and stop when you hit it. Diminishing returns are real.
+
+## Start Today
+
+Next time you write a prompt for anything that matters:
+1. Spend 5 minutes writing 10 test inputs
+2. Run them through your prompt
+3. Score the results
+4. Fix the worst failures
+5. Repeat until the score is acceptable
+
+The whole process takes 30 minutes for a simple task. The prompt you end up with will work reliably for months instead of failing the first time it encounters real data.
+
+That's the difference between prompt writing and prompt engineering.

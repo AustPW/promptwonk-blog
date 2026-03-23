@@ -1,0 +1,171 @@
+---
+title: "Prompt Engineering vs. Fine-Tuning: When to Use Each"
+date: "2026-03-11"
+tags: ["advanced", "strategy", "comparisons"]
+excerpt: "Fine-tuning sounds impressive. But for most use cases, good prompts beat custom models. Here's a decision framework for when each approach actually makes sense."
+author: "PromptWonk Team"
+---
+
+Every few weeks, someone on Twitter declares that prompt engineering is dead and fine-tuning is the future. Then someone else argues the opposite. Both are wrong — they're different tools for different problems.
+
+Let's cut through the noise with a practical framework for deciding which to use.
+
+## The Quick Decision
+
+**Use prompt engineering when:**
+- Your task can be described in natural language
+- You need flexibility to change behavior frequently
+- You're working with fewer than 10,000 requests per day
+- Latency tolerance is reasonable (1-5 seconds)
+- You don't have a large labeled dataset
+
+**Use fine-tuning when:**
+- You need consistent behavior across millions of requests
+- Latency requirements are tight (sub-second)
+- You have a large, high-quality labeled dataset (1,000+ examples minimum)
+- The task requires domain knowledge the base model lacks
+- Token costs at scale justify the upfront investment
+
+**Use both when:**
+- You fine-tune a model AND give it well-structured prompts (this is common and often the best approach)
+
+## What Fine-Tuning Actually Does
+
+Fine-tuning updates the model's weights using your data. It's like teaching a new skill vs. giving instructions.
+
+When you fine-tune for customer support:
+- The model *learns* your company's voice, product names, and policies
+- It responds in your style by default, without being told
+- Edge cases you've included in training data are handled natively
+
+When you prompt for customer support:
+- The model follows your instructions each time
+- It needs context about your company in every prompt
+- Edge cases need to be explicitly described
+
+Think of it this way: prompting is like giving someone a detailed recipe every time they cook. Fine-tuning is like training them to cook your style of food.
+
+## The Cost-Benefit Analysis
+
+### Prompt Engineering Costs
+- **Time:** Hours to develop good prompts, ongoing iteration
+- **Tokens:** Longer prompts = more tokens per request
+- **Infrastructure:** Minimal — just API calls
+- **Flexibility:** Change behavior instantly by editing prompts
+- **Risk:** Low — easy to roll back
+
+### Fine-Tuning Costs
+- **Time:** Days to weeks for data prep, training, evaluation
+- **Data:** Need high-quality labeled examples (expensive to create)
+- **Infrastructure:** Training compute, model hosting, version management
+- **Flexibility:** Low — retraining needed for behavior changes
+- **Risk:** Higher — bad training data = bad model, hard to debug
+
+At 100 requests/day, prompt engineering wins on cost every time. The token overhead of a detailed prompt is negligible compared to the cost of data preparation and training.
+
+At 100,000 requests/day, the math changes. If fine-tuning lets you use shorter prompts (saving 500 tokens per request), the savings add up fast.
+
+## Real-World Decision Examples
+
+### Example 1: Internal Tool — Summarize Meeting Notes
+
+**Volume:** 50 summaries/day
+**Requirements:** Consistent format, capture action items, identify owners
+
+**Verdict: Prompt engineering.**
+
+A well-structured few-shot prompt handles this perfectly. You can iterate on the prompt format weekly based on feedback. There's no way to justify a fine-tuning pipeline for 50 requests per day.
+
+```
+Prompt approach:
+"Summarize the following meeting transcript.
+
+Format:
+## Summary (2-3 sentences)
+## Key Decisions
+- [decision]: [context]
+## Action Items
+- [ ] [Owner]: [task] (deadline)
+
+Transcript:
+{transcript}"
+```
+
+### Example 2: E-Commerce Product Categorization
+
+**Volume:** 500,000 products/month
+**Requirements:** Categorize into 200+ categories, 95%+ accuracy
+
+**Verdict: Fine-tuning.**
+
+At this volume, a fine-tuned model that categorizes products with a short prompt (just the product title and description) saves massive token costs vs. a prompt that includes category definitions and examples. Plus, the consistency requirements demand training on your specific category taxonomy.
+
+### Example 3: Customer Support Email Drafts
+
+**Volume:** 2,000 emails/day
+**Requirements:** Match company tone, reference correct policies, handle 50+ scenarios
+
+**Verdict: Both.**
+
+Fine-tune a model on your historical support emails to nail the tone and policy knowledge. Then use prompts to handle specific instructions for each email (urgency level, customer history, specific issue context).
+
+```
+Fine-tuned model + prompt:
+"Draft a response to this customer email.
+
+Priority: High — longtime customer
+Issue: Billing discrepancy from January
+Context: Customer was charged $49 instead of $29 (legacy plan pricing)
+Resolution: Issue refund + apply correct pricing going forward
+
+Email to respond to:
+{email}"
+```
+
+The fine-tuned model already knows your voice and policies. The prompt handles the per-email specifics.
+
+### Example 4: Legal Document Analysis
+
+**Volume:** 200 documents/week
+**Requirements:** Extract specific clauses, flag risks, compare to templates
+
+**Verdict: Prompt engineering with RAG.**
+
+Legal tasks require precision and explainability. Fine-tuning on legal documents is risky because you need to know *why* the model flagged something. Prompt engineering with retrieval-augmented generation (pulling in relevant clause templates and risk criteria) gives you control and transparency.
+
+## The Middle Ground Most People Miss
+
+The debate usually frames these as either/or. In practice, the most effective approach is often:
+
+1. **Start with prompt engineering.** Get the task working with prompts alone. This forces you to understand the task deeply and identify what the model struggles with.
+
+2. **Collect data naturally.** As you use prompts in production, save the inputs and outputs. Have humans correct the bad outputs. Now you have training data.
+
+3. **Fine-tune when the data justifies it.** Once you have enough corrected examples and the volume justifies the investment, fine-tune. Use the prompt-engineered version as your baseline to beat.
+
+4. **Keep prompting the fine-tuned model.** Fine-tuning doesn't replace prompts — it makes them shorter and more effective.
+
+## Signs You're Over-Indexing on One Approach
+
+### Signs you need fine-tuning (but are stuck on prompts):
+- Your prompts are 2,000+ tokens of context and instructions
+- You're spending more time on prompt engineering than actual product work
+- Output quality plateaued and no amount of prompt tweaking helps
+- Token costs are a significant budget item
+
+### Signs you need better prompts (but are jumping to fine-tuning):
+- You haven't tried few-shot prompting yet
+- Your "failed" prompts are vague and lack structure
+- You don't have a labeled dataset
+- Your task changes frequently
+- You're on a small team without ML infrastructure
+
+## The Practical Takeaway
+
+For 80% of use cases, prompt engineering is the right answer. It's faster to implement, easier to iterate on, and cheaper to maintain. The models keep getting better, which means prompts keep getting more effective for free.
+
+Fine-tuning is a power tool. It's the right choice when you have the data, the volume, and the consistency requirements to justify it. But reaching for it before you've mastered prompting is like buying a CNC machine before you've learned to use a hand drill.
+
+Master prompts first. Fine-tune when the data tells you to. Use both when it makes sense.
+
+That's the whole framework.
