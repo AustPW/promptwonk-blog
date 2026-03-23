@@ -7,7 +7,7 @@ export default function HomePage() {
   const tags = getAllTags();
 
   return (
-    <div className="bg-gradient-to-bl from-background/95 to-background/75">
+    <div>
       <div className="max-w-6xl mx-auto px-6 py-16">
         {/* Hero */}
         <div className="text-center mb-16">

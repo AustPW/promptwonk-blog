@@ -12,7 +12,7 @@ function formatDate(dateStr: string) {
 export default function PostCard({ post }: { post: PostMeta }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
-      <article className="rounded-2xl border border-white/10 bg-black/25 overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20">
+      <article className="rounded-xl border border-white/10 bg-black/25 overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20">
         {/* Gradient accent bar */}
         <div
           className="h-[3px] w-full"

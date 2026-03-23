@@ -58,7 +58,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-gradient-to-bl from-background/95 via-primary/10 to-background/75">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
