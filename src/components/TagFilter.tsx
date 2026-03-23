@@ -22,11 +22,23 @@ export default function TagFilter({
       <div className="flex flex-wrap gap-2 justify-center mb-10">
         <button
           onClick={() => setActiveTag(null)}
-          className={`text-sm font-medium px-4 py-1.5 rounded-full border transition-colors ${
+          className={`text-[11px] font-semibold uppercase tracking-[1.3px] px-3 py-1 rounded-full transition-colors ${
             activeTag === null
-              ? "bg-primary/20 text-primary border-primary/40"
-              : "bg-muted text-muted-foreground border-white/10 hover:border-muted-foreground"
+              ? "text-cyan-200"
+              : "text-muted-foreground hover:text-cyan-200"
           }`}
+          style={{
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor:
+              activeTag === null
+                ? "rgba(103,232,249,0.35)"
+                : "rgba(255,255,255,0.1)",
+            backgroundColor:
+              activeTag === null
+                ? "rgba(6,182,212,0.11)"
+                : "transparent",
+          }}
         >
           All
         </button>
@@ -34,11 +46,23 @@ export default function TagFilter({
           <button
             key={tag}
             onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-            className={`text-sm font-medium px-4 py-1.5 rounded-full border transition-colors ${
+            className={`text-[11px] font-semibold uppercase tracking-[1.3px] px-3 py-1 rounded-full transition-colors ${
               activeTag === tag
-                ? "bg-primary/20 text-primary border-primary/40"
-                : "bg-muted text-muted-foreground border-white/10 hover:border-muted-foreground"
+                ? "text-cyan-200"
+                : "text-muted-foreground hover:text-cyan-200"
             }`}
+            style={{
+              borderWidth: 1,
+              borderStyle: "solid",
+              borderColor:
+                activeTag === tag
+                  ? "rgba(103,232,249,0.35)"
+                  : "rgba(255,255,255,0.1)",
+              backgroundColor:
+                activeTag === tag
+                  ? "rgba(6,182,212,0.11)"
+                  : "transparent",
+            }}
           >
             {tag}
           </button>

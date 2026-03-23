@@ -95,7 +95,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-6xl mx-auto px-6 py-16">
+      <article className="max-w-6xl mx-auto px-6 py-16 bg-gradient-to-bl from-background/95 to-background/75">
         {/* Back link */}
         <Link
           href="/"
@@ -116,7 +116,12 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/20"
+                    className="text-[11px] font-semibold uppercase tracking-[1.3px] text-cyan-200 px-2.5 py-0.5 rounded-full"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "rgba(103,232,249,0.35)",
+                      backgroundColor: "rgba(6,182,212,0.11)",
+                    }}
                   >
                     {tag}
                   </span>

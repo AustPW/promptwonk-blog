@@ -12,11 +12,11 @@ export default function Header() {
   ];
 
   return (
-    <header className="border-b border-white/5 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-white/5 bg-black/25 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center">
-            <span className="text-primary font-bold text-lg">âš¡</span>
+          <div className="h-9 w-9 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 flex">
+            <span className="text-primary font-bold text-lg">⚡</span>
           </div>
           <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
             PromptWonk

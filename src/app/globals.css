@@ -28,6 +28,7 @@ body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+  min-height: 100vh;
 }
 
 /* Reading progress bar */
