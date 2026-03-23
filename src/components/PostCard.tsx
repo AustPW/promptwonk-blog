@@ -12,7 +12,7 @@ function formatDate(dateStr: string) {
 export default function PostCard({ post }: { post: PostMeta }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
-      <article className="bg-background/70 backdrop-blur-md border border-white/10 rounded-2xl p-6 h-full transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-0.5 shadow-lg shadow-black/5">
+      <article style={{backgroundColor: 'rgba(255,255,255,0.03)'}} className="border border-primary/30 rounded-2xl p-6 h-full transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-0.5 shadow-xl shadow-black/20 backdrop-blur-md">
         <div className="flex flex-wrap gap-2 mb-3">
           {post.tags.slice(0, 3).map((tag) => (
             <span
